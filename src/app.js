@@ -1,5 +1,6 @@
 import express from "express";
 import dbConnect from "./config/dbConnect.js";
+import livro from "./models/Livro.js";
 
 const conexao = await dbConnect();
 
@@ -15,32 +16,13 @@ conexao.once("open",()=>{
 const app = express();
 app.use(express.json());
 
-const livros = [
-    {
-        id: 1,
-        titulo: "O Senhor dos Anéis",
-    },
-    {
-        id: 2,
-        titulo: "Harry Potter",
-    },
-    {
-        id: 3,
-        titulo: "As Crônicas de Gelo e Fogo",
-    },
-];
-
-const buscaLivro = (id) => {
-    const livro = livros.find((livro) => livro.id == Number(id));
-    return livro;
-}
-
 app.get("/", (req, res) => {
     res.status(200).send("Curso de Express");
 });
 
-app.get("/livros", (req, res) => {
-    res.status(200).json(livros);
+app.get("/livros", async (req, res) => {
+    const listaLivros = await livro.find({});
+    res.status(200).json(listaLivros);
 });
 
 app.post("/livros", (req, res) => {
