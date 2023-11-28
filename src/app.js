@@ -1,19 +1,20 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 const livros = [
     {
         id: 1,
-        nome: "O Senhor dos Anéis",
+        titulo: "O Senhor dos Anéis",
     },
     {
         id: 2,
-        nome: "Harry Potter",
+        titulo: "Harry Potter",
     },
     {
         id: 3,
-        nome: "As Crônicas de Gelo e Fogo",
+        titulo: "As Crônicas de Gelo e Fogo",
     },
 ];
 
@@ -30,6 +31,12 @@ app.get("/livros", (req, res) => {
     res.status(200).json(livros);
 });
 
+app.post("/livros", (req, res) => {
+    const livro = req.body;
+    livros.push(livro);
+    res.status(201).json(livro);
+});
+
 app.get("/livros/:id", (req, res) => {
     const id = req.params.id;
     const livro = buscaLivro(id);
@@ -39,7 +46,26 @@ app.get("/livros/:id", (req, res) => {
     res.status(200).json(livro);
 });
 
-app.post("/livros", (req, res) => {
+app.put("/livros/:id", (req, res) => {
+    const id = req.params.id;
+    const livroBody = req.body;
+    const livro = buscaLivro(id);
+    if (!livro) {
+        res.status(404).send("Livro não encontrado");
+    }
+    livro.titulo = livroBody.titulo;
+    res.status(200).json(livro);
+});
+
+app.delete("/livros/:id", (req, res) => {
+    const id = req.params.id;
+    const livro = buscaLivro(id);
+    if (!livro) {
+        res.status(404).send("Livro não encontrado");
+    }
+    const index = livros.indexOf(livro);
+    livros.splice(index, 1);
+    res.status(200).json(livro);
 });
 
 app.get("/autores", (req, res) => {
