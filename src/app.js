@@ -1,4 +1,16 @@
 import express from "express";
+import dbConnect from "./config/dbConnect.js";
+
+const conexao = await dbConnect();
+
+conexao.on("error",(erro)=>{
+    console.error("Erro de Conexão:",erro);
+});
+
+conexao.once("open",()=>{
+    console.log("Conexão realizada com Sucesso!")
+});
+
 
 const app = express();
 app.use(express.json());
