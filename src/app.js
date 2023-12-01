@@ -1,6 +1,6 @@
 import express from "express";
 import dbConnect from "./config/dbConnect.js";
-import livro from "./models/Livro.js";
+import LivroController from "./controllers/livroController.js";
 
 const conexao = await dbConnect();
 
@@ -12,7 +12,6 @@ conexao.once("open",()=>{
     console.log("Conexão realizada com Sucesso!")
 });
 
-
 const app = express();
 app.use(express.json());
 
@@ -20,10 +19,7 @@ app.get("/", (req, res) => {
     res.status(200).send("Curso de Express");
 });
 
-app.get("/livros", async (req, res) => {
-    const listaLivros = await livro.find({});
-    res.status(200).json(listaLivros);
-});
+app.get("/livros", LivroController.listarLivros);
 
 app.post("/livros", (req, res) => {
     const livro = req.body;
